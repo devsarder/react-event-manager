@@ -1,7 +1,6 @@
 import Navbar from "../Navbar/Navbar";
 
 const Services = () => {
-    
   return (
     <div>
       <Navbar></Navbar>
