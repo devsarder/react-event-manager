@@ -8,6 +8,7 @@ import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import PrivateRoute from "../pages/Services/PrivateRoute";
 import PrivateBlog from "../pages/Blog/PrivateBlog";
 import Blog from "../pages/Blog/Blog";
+import ServiceDetails from "../pages/Services/ServiceDetails";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,11 @@ export const router = createBrowserRouter([
             <Blog></Blog>
           </PrivateBlog>
         ),
+      },
+      {
+        path: "/service/:id",
+        element: <ServiceDetails></ServiceDetails>,
+        loader: () => fetch("events.json"),
       },
     ],
   },

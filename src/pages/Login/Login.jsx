@@ -2,11 +2,27 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProviders";
+import { FaGoogle } from "react-icons/fa";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import app from "../../firebase/firebase.config";
 
 const Login = () => {
   const { signInUser, user } = useContext(AuthContext);
   const [validation, setValidation] = useState("");
   const navigate = useNavigate();
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+  const handleGoogleAuth = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const user = result.user;
+        navigate("/");
+        console.log(user);
+      })
+      .catch((err) => {
+        console.error(err.code);
+      });
+  };
 
   const handleSignIn = (e) => {
     e.preventDefault();
@@ -14,7 +30,6 @@ const Login = () => {
     const form = new FormData(e.currentTarget);
     const email = form.get("email");
     const password = form.get("password");
-
     signInUser(email, password)
       .then((userCredential) => {
         const logIndUser = userCredential.user;
@@ -71,6 +86,11 @@ const Login = () => {
               <div className="form-control mt-6">
                 <button className="btn bg-green-400">Login</button>
               </div>
+              <hr />
+              <Link className="btn bg-green-400 ">
+                <FaGoogle></FaGoogle>
+                <button onClick={handleGoogleAuth}>Login With Google </button>
+              </Link>
             </div>
           </div>
         </form>

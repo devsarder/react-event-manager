@@ -9,7 +9,6 @@ import {
 import PropTypes from "prop-types";
 import app from "../firebase/firebase.config";
 const auth = getAuth(app);
-
 export const AuthContext = createContext(null);
 
 const AuthProviders = ({ children }) => {
@@ -32,15 +31,16 @@ const AuthProviders = ({ children }) => {
   const signInUser = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
+
   // sign out handler
-  const logOut=()=>{
+  const logOut = () => {
     return signOut(auth);
-  }
+  };
   const authInfo = {
     user,
     createUser,
     signInUser,
-    logOut
+    logOut,
   };
   return (
     <div>
