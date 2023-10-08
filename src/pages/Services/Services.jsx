@@ -1,10 +1,19 @@
+import { useLoaderData } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import Service from "./Service";
 
 const Services = () => {
+  const servicesData = useLoaderData();
+  console.log(servicesData);
   return (
-    <div>
+    <div className="max-w-6xl mx-auto ">
       <Navbar></Navbar>
-      <h2>this will be the services page</h2>
+
+      <div className=" my-10  lg:grid  gap-2 grid-cols-3">
+        {servicesData.map((service) => (
+          <Service key={service.id} service={service}></Service>
+        ))}
+      </div>
     </div>
   );
 };

@@ -1,7 +1,34 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 const Login = () => {
+  const { signInUser, user } = useContext(AuthContext);
+  const [validation, setValidation] = useState("");
+  const navigate = useNavigate();
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+
+    const form = new FormData(e.currentTarget);
+    const email = form.get("email");
+    const password = form.get("password");
+
+    signInUser(email, password)
+      .then((userCredential) => {
+        const logIndUser = userCredential.user;
+        console.log(logIndUser);
+        navigate("/");
+        e.target.reset();
+      })
+      .catch((error) => {
+        const errorMsg = error.message;
+        const errorCode = error.code;
+        setValidation(errorMsg);
+        console.error(errorMsg, errorCode);
+      });
+  };
   return (
     <div>
       <Navbar />
@@ -9,7 +36,7 @@ const Login = () => {
         <h2 className="text-center text-2xl font-semibold my-2">
           Login your account
         </h2>
-        <form>
+        <form onSubmit={handleSignIn}>
           <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             <div className="card-body">
               <div className="form-control">
@@ -53,6 +80,9 @@ const Login = () => {
             Register
           </Link>
         </p>
+      </div>
+      <div className="text-center  text-red-700 text-lg">
+        <p className={user && "hidden "}>{validation}</p>
       </div>
     </div>
   );

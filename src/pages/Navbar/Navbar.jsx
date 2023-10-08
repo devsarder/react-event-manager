@@ -1,9 +1,24 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import userPhotoUrl from "../../assets/user.png";
 
 import logoUrl from "../../assets/logo-light.png";
+import { useContext } from "react";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const logOutHandler = (e) => {
+    e.preventDefault();
+    logOut()
+      .then(() => {
+        alert("you are currently logged out");
+        navigate("/login");
+      })
+      .catch((err) => console.Console(err));
+  };
+
   const navLinks = (
     <>
       <li>
@@ -12,18 +27,14 @@ const Navbar = () => {
       <li>
         <NavLink to="/services">Services</NavLink>
       </li>
-      <li>
-        <NavLink to="/career">Blog</NavLink>
-      </li>
-      <li>
-        <NavLink to="/career">Contact</NavLink>
-      </li>
+      <li>{user && <NavLink to="/blog">Blog</NavLink>}</li>
+      <li>{user && <NavLink to="/career">Contact</NavLink>}</li>
     </>
   );
 
   return (
     <div className=" max-w-6xl mx-auto navbar bg-base-100">
-        <img className="bg-green-400 h-10 rounded-sm p-1" src={logoUrl} alt="" />
+      <img className="bg-green-400 h-10 rounded-sm p-1" src={logoUrl} alt="" />
       <div className=" navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -51,7 +62,9 @@ const Navbar = () => {
         </div>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu bg-transparent hover:text-green-400 menu-horizontal px-1">{navLinks}</ul>
+        <ul className="menu bg-transparent hover:text-green-400 menu-horizontal px-1">
+          {navLinks}
+        </ul>
       </div>
       <div className="navbar-end">
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -59,9 +72,19 @@ const Navbar = () => {
             <img src={userPhotoUrl} />
           </div>
         </label>
-        <Link to="/login" className="btn bg-green-400 text-white">
-          Login
-        </Link>
+        {user ? (
+          <Link
+            onClick={logOutHandler}
+            to="/login"
+            className="btn bg-green-400 text-white"
+          >
+            Sign Out
+          </Link>
+        ) : (
+          <Link to="/login" className="btn bg-green-400 text-white">
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );
